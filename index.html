@@ -29,6 +29,7 @@
             line-height: 1.6;
             font-weight: 300;
             letter-spacing: 0.5px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -42,6 +43,7 @@
             padding: 40px 0;
             text-align: center;
             border-bottom: 1px solid var(--taupe);
+            position: relative;
         }
 
         .nom {
@@ -73,10 +75,19 @@
             font-size: 1.3rem;
             text-decoration: none;
             transition: var(--transition);
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 50%;
+            display: block;
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            line-height: 25px;
         }
 
         .instagram-link a:hover {
             color: var(--or);
+            background: rgba(255,255,255,0.1);
         }
 
         /* Grille photos luxe */
@@ -87,13 +98,14 @@
         .photos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1px;
+            gap: 2px;
         }
 
         .photo-item {
             position: relative;
             overflow: hidden;
             aspect-ratio: 1;
+            background: var(--gris-fonce);
         }
 
         .photo-item img {
@@ -101,12 +113,39 @@
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
-            filter: grayscale(20%);
+            filter: grayscale(30%);
         }
 
         .photo-item:hover img {
-            transform: scale(1.03);
+            transform: scale(1.05);
             filter: grayscale(0%);
+        }
+
+        /* États de chargement */
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+            color: var(--taupe);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            grid-column: 1 / -1;
+        }
+
+        .error {
+            color: var(--taupe);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.9rem;
+            grid-column: 1 / -1;
+        }
+
+        .success {
+            color: var(--taupe);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            grid-column: 1 / -1;
         }
 
         /* Footer luxe */
@@ -130,6 +169,13 @@
                 right: 20px;
             }
             
+            .instagram-link a {
+                width: 40px;
+                height: 40px;
+                line-height: 20px;
+                font-size: 1.1rem;
+            }
+            
             .container {
                 padding: 0 20px;
             }
@@ -138,15 +184,25 @@
                 font-size: 1.1rem;
                 letter-spacing: 6px;
             }
+            
+            .gallery {
+                padding: 60px 0 80px;
+            }
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 60px 0;
-            color: var(--taupe);
-            font-size: 0.9rem;
-            letter-spacing: 2px;
+        @media (max-width: 480px) {
+            .photos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .nom {
+                font-size: 1rem;
+                letter-spacing: 4px;
+            }
+            
+            .titre {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -170,7 +226,7 @@
     <section class="gallery">
         <div class="container">
             <div id="photos-grid" class="photos-grid">
-                <div class="loading">Chargement des photos...</div>
+                <div class="loading">Chargement de la galerie...</div>
             </div>
         </div>
     </section>
@@ -183,33 +239,93 @@
     </footer>
 
     <script>
-        // Liste de toutes les photos dans sampleFolder
-        const photos = [
-            // AJOUTEZ TOUS VOS FICHIERS ICI - Exemples :
-            'P1070124.jpg',
-            // AJOUTEZ TOUTES VOS AUTRES PHOTOS...
+        // LISTE DE TOUTES VOS PHOTOS - REMPLACEZ PAR VOS VRAIS FICHIERS
+        const mesPhotos = [
+            'sampleFolder/P1070124.jpg',
+            'sampleFolder/photo2.jpg',
+            'sampleFolder/photo3.jpg',
+            'sampleFolder/photo4.jpg',
+            'sampleFolder/photo5.jpg',
+            'sampleFolder/photo6.jpg'
+            // AJOUTEZ TOUTES VOS AUTRES PHOTOS ICI
+            // Exemple : 'sampleFolder/MON_PHOTO_7.jpg'
         ];
 
-        function chargerPhotos() {
+        function chargerGalerie() {
             const grid = document.getElementById('photos-grid');
-            grid.innerHTML = ''; // Enlève le message "Chargement"
+            grid.innerHTML = '<div class="loading">Préparation des images...</div>';
             
-            photos.forEach(photo => {
+            let photosChargees = 0;
+            let photosErreurs = 0;
+            const totalPhotos = mesPhotos.length;
+            
+            if (totalPhotos === 0) {
+                grid.innerHTML = '<div class="error">Aucune photo configurée dans la galerie</div>';
+                return;
+            }
+            
+            // Vider le grid pour les nouvelles photos
+            grid.innerHTML = '';
+            
+            mesPhotos.forEach((cheminPhoto, index) => {
                 const photoItem = document.createElement('div');
                 photoItem.className = 'photo-item';
+                photoItem.id = `photo-${index}`;
                 
                 const img = document.createElement('img');
-                img.src = photo;
-                img.alt = 'Photo ' + photo.split('/').pop(); // Prend le nom du fichier
-                img.loading = 'lazy'; // Chargement paresseux pour meilleures performances
+                img.src = cheminPhoto;
+                img.alt = `Photo ${index + 1}`;
+                img.loading = 'lazy';
+                
+                // Gestion du chargement réussi
+                img.onload = function() {
+                    photosChargees++;
+                    photoItem.classList.add('chargee');
+                    mettreAJourStatut();
+                };
+                
+                // Gestion des erreurs
+                img.onerror = function() {
+                    photosErreurs++;
+                    photoItem.innerHTML = `<div class="error">Image non trouvée: ${cheminPhoto.split('/').pop()}</div>`;
+                    mettreAJourStatut();
+                };
                 
                 photoItem.appendChild(img);
                 grid.appendChild(photoItem);
             });
+            
+            function mettreAJourStatut() {
+                if (photosChargees + photosErreurs === totalPhotos) {
+                    const statut = document.createElement('div');
+                    statut.className = 'success';
+                    
+                    if (photosChargees === 0) {
+                        statut.innerHTML = `Aucune photo chargée. Vérifiez les noms de fichiers dans sampleFolder/`;
+                    } else if (photosErreurs > 0) {
+                        statut.innerHTML = `${photosChargees} photo(s) affichée(s) • ${photosErreurs} erreur(s)`;
+                    } else {
+                        statut.innerHTML = `${photosChargees} photo(s) affichée(s)`;
+                    }
+                    
+                    // Ajouter le statut seulement s'il y a des erreurs ou succès mixte
+                    if (photosErreurs > 0 || photosChargees === 0) {
+                        grid.appendChild(statut);
+                    }
+                }
+            }
         }
 
-        // Charge les photos quand la page est prête
-        document.addEventListener('DOMContentLoaded', chargerPhotos);
+        // Démarrer le chargement quand la page est prête
+        document.addEventListener('DOMContentLoaded', function() {
+            // Petit délai pour l'effet visuel
+            setTimeout(chargerGalerie, 500);
+        });
+
+        // Recharger la galerie si besoin (pour debug)
+        window.actualiserGalerie = function() {
+            chargerGalerie();
+        };
     </script>
 </body>
 </html>
