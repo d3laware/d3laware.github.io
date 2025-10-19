@@ -5,141 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HERAULT Adel - Photographe & Artiste 3D</title>
     <style>
-        :root { 
-            --noir: #000000; 
-            --blanc: #ffffff; 
-            --taupe: #8a7f70; 
-            --or: #c4a86f;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Helvetica Neue', Arial, sans-serif; 
-            background: var(--noir); 
-            color: var(--blanc); 
-            line-height: 1.6;
-            font-weight: 300;
-            letter-spacing: 0.5px;
-        }
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
-        header { 
-            padding: 40px 0; 
-            text-align: center; 
-            border-bottom: 1px solid var(--taupe); 
-        }
-        .nom { 
-            font-size: 1.4rem; 
-            letter-spacing: 8px; 
-            text-transform: uppercase; 
-            margin-bottom: 10px; 
-            font-weight: 300;
-        }
-        .titre { 
-            font-size: 0.9rem; 
-            letter-spacing: 3px; 
-            color: var(--taupe); 
-            text-transform: uppercase; 
-            font-weight: 300;
-        }
-        .instagram-link { 
-            position: fixed; 
-            top: 40px; 
-            right: 40px; 
-            z-index: 1000; 
-        }
-        .instagram-link a { 
-            color: var(--blanc); 
-            font-size: 1.3rem; 
-            text-decoration: none; 
-            background: rgba(0,0,0,0.7); 
-            padding: 10px; 
-            border-radius: 50%; 
-            display: block; 
-            width: 45px; 
-            height: 45px; 
-            text-align: center; 
-            line-height: 25px; 
-            transition: all 0.3s ease;
-        }
-        .instagram-link a:hover {
-            color: var(--or);
-            background: rgba(255,255,255,0.1);
-        }
-        .gallery { padding: 80px 0 100px; }
-        .photos-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 2px; 
-        }
-        .photo-item { 
-            aspect-ratio: 1; 
-            background: #1a1a1a;
-            overflow: hidden;
-        }
-        .photo-item img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: all 0.4s ease;
-            filter: grayscale(30%);
-        }
-        .photo-item:hover img {
-            transform: scale(1.05);
-            filter: grayscale(0%);
-        }
-        footer {
+            font-family: Arial, sans-serif; 
+            background: black; 
+            color: white; 
             text-align: center;
-            padding: 60px 0;
-            border-top: 1px solid var(--taupe);
-            color: var(--taupe);
-            font-size: 0.7rem;
-            letter-spacing: 2px;
+            padding: 50px;
         }
-        
-        @media (max-width: 768px) {
-            .photos-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            .instagram-link {
-                top: 20px;
-                right: 20px;
-            }
-            .container {
-                padding: 0 20px;
-            }
-            .nom {
-                font-size: 1.1rem;
-                letter-spacing: 6px;
-            }
+        .test-box {
+            background: #333;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+        img {
+            max-width: 300px;
+            border: 2px solid white;
         }
     </style>
 </head>
 <body>
-    <div class="instagram-link">
-        <a href="https://www.instagram.com/ltad_l/" target="_blank" title="Instagram">📸</a>
+    <h1>TEST PHOTO P1070124.jpg</h1>
+    
+    <div class="test-box">
+        <h2>Test 1: Chemin relatif</h2>
+        <img src="sampleFolder/P1070124.jpg" alt="Test 1" onerror="this.style.display='none'; document.getElementById('error1').style.display='block'">
+        <div id="error1" style="display:none; color:red;">
+            ❌ sampleFolder/P1070124.jpg - NON TROUVÉ
+        </div>
     </div>
 
-    <header>
-        <div class="container">
-            <div class="nom">HERAULT Adel</div>
-            <div class="titre">Photographe & Artiste 3D Débutant</div>
+    <div class="test-box">
+        <h2>Test 2: Chemin avec ./</h2>
+        <img src="./sampleFolder/P1070124.jpg" alt="Test 2" onerror="this.style.display='none'; document.getElementById('error2').style.display='block'">
+        <div id="error2" style="display:none; color:red;">
+            ❌ ./sampleFolder/P1070124.jpg - NON TROUVÉ
         </div>
-    </header>
+    </div>
 
-    <section class="gallery">
-        <div class="container">
-            <div class="photos-grid">
-                <!-- CORRECTION : ./ devant le chemin -->
-                <div class="photo-item">
-                    <img src="./sampleFolder/P1070124.jpg" alt="HERAULT Adel - Photographie">
-                </div>
-            </div>
+    <div class="test-box">
+        <h2>Test 3: URL absolue GitHub</h2>
+        <img src="https://raw.githubusercontent.com/d3laware/d3laware.github.io/main/sampleFolder/P1070124.jpg" alt="Test 3" onerror="this.style.display='none'; document.getElementById('error3').style.display='block'">
+        <div id="error3" style="display:none; color:red;">
+            ❌ URL GitHub raw - NON TROUVÉ
         </div>
-    </section>
+    </div>
 
-    <footer>
-        <div class="container">
-            <p>HERAULT Adel © 2024</p>
-        </div>
-    </footer>
+    <div class="test-box">
+        <h3>🎯 DIAGNOSTIC</h3>
+        <p>Si les 3 tests échouent, la photo n'est pas sur GitHub.</p>
+        <p>Si seul le test 3 marche, le problème vient des chemins relatifs.</p>
+        <p><a href="https://github.com/d3laware/d3laware.github.io/tree/main/sampleFolder" target="_blank" style="color: yellow;">
+            🔍 Vérifiez sampleFolder sur GitHub
+        </a></p>
+    </div>
 </body>
 </html>
