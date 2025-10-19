@@ -79,36 +79,9 @@
             color: var(--or);
         }
 
-        /* Catégories */
-        .categories {
-            text-align: center;
-            padding: 80px 0 60px;
-        }
-
-        .category-btn {
-            background: none;
-            border: 1px solid var(--taupe);
-            padding: 15px 40px;
-            margin: 0 15px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            transition: var(--transition);
-            color: var(--taupe);
-            font-weight: 300;
-        }
-
-        .category-btn.active,
-        .category-btn:hover {
-            background: var(--blanc);
-            color: var(--noir);
-            border-color: var(--blanc);
-        }
-
         /* Grille photos luxe */
         .gallery {
-            padding: 0 0 100px;
+            padding: 80px 0 100px;
         }
 
         .photos-grid {
@@ -136,21 +109,6 @@
             filter: grayscale(0%);
         }
 
-        /* Sections cachées */
-        .category-section {
-            display: none;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .category-section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         /* Footer luxe */
         footer {
             text-align: center;
@@ -172,12 +130,6 @@
                 right: 20px;
             }
             
-            .category-btn {
-                display: block;
-                margin: 10px auto;
-                width: 250px;
-            }
-            
             .container {
                 padding: 0 20px;
             }
@@ -186,6 +138,15 @@
                 font-size: 1.1rem;
                 letter-spacing: 6px;
             }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+            color: var(--taupe);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
         }
     </style>
 </head>
@@ -205,64 +166,11 @@
         </div>
     </header>
 
-    <!-- Catégories -->
-    <section class="categories">
+    <!-- Galerie Automatique -->
+    <section class="gallery">
         <div class="container">
-            <button class="category-btn active" data-category="bonnes">Sélection</button>
-            <button class="category-btn" data-category="essais">Explorations</button>
-        </div>
-    </section>
-
-    <!-- Galerie Bonnes Photos -->
-    <section id="bonnes" class="category-section active">
-        <div class="gallery">
-            <div class="photos-grid">
-                <!-- REMPLACEZ CES IMAGES PAR VOS MEILLEURES PHOTOS -->
-                <div class="photo-item">
-                    <img src="sampleFolder/photo1.jpg" alt="Titre de votre photo 1">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/photo2.jpg" alt="Titre de votre photo 2">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/photo3.jpg" alt="Titre de votre photo 3">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/photo4.jpg" alt="Titre de votre photo 4">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/photo5.jpg" alt="Titre de votre photo 5">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/photo6.jpg" alt="Titre de votre photo 6">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Galerie Essais -->
-    <section id="essais" class="category-section">
-        <div class="gallery">
-            <div class="photos-grid">
-                <!-- REMPLACEZ CES IMAGES PAR VOS ESSAIS -->
-                <div class="photo-item">
-                    <img src="sampleFolder/essai1.jpg" alt="Description de votre essai 1">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/essai2.jpg" alt="Description de votre essai 2">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/essai3.jpg" alt="Description de votre essai 3">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/essai4.jpg" alt="Description de votre essai 4">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/essai5.jpg" alt="Description de votre essai 5">
-                </div>
-                <div class="photo-item">
-                    <img src="sampleFolder/essai6.jpg" alt="Description de votre essai 6">
-                </div>
+            <div id="photos-grid" class="photos-grid">
+                <div class="loading">Chargement des photos...</div>
             </div>
         </div>
     </section>
@@ -275,24 +183,33 @@
     </footer>
 
     <script>
-        // Navigation entre catégories
-        const categoryBtns = document.querySelectorAll('.category-btn');
-        const categorySections = document.querySelectorAll('.category-section');
+        // Liste de toutes les photos dans sampleFolder
+        const photos = [
+            // AJOUTEZ TOUS VOS FICHIERS ICI - Exemples :
+            'P1070124.jpg',
+            // AJOUTEZ TOUTES VOS AUTRES PHOTOS...
+        ];
 
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Retirer active de tous
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                categorySections.forEach(s => s.classList.remove('active'));
+        function chargerPhotos() {
+            const grid = document.getElementById('photos-grid');
+            grid.innerHTML = ''; // Enlève le message "Chargement"
+            
+            photos.forEach(photo => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
                 
-                // Activer le bouton cliqué
-                btn.classList.add('active');
+                const img = document.createElement('img');
+                img.src = photo;
+                img.alt = 'Photo ' + photo.split('/').pop(); // Prend le nom du fichier
+                img.loading = 'lazy'; // Chargement paresseux pour meilleures performances
                 
-                // Afficher la section correspondante
-                const category = btn.getAttribute('data-category');
-                document.getElementById(category).classList.add('active');
+                photoItem.appendChild(img);
+                grid.appendChild(photoItem);
             });
-        });
+        }
+
+        // Charge les photos quand la page est prête
+        document.addEventListener('DOMContentLoaded', chargerPhotos);
     </script>
 </body>
 </html>
