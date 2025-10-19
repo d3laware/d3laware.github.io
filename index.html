@@ -3,721 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Portfolio</title>
+    <title>ltad_l - Portfolio Photo</title>
     <style>
-        /* Variables CSS */
+        /* Variables en noir, blanc et taupe */
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-            --text-color: #333;
-            --text-light: #fff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --noir: #1a1a1a;
+            --taupe: #8a7f70;
+            --blanc: #f5f5f5;
+            --taupe-clair: #d4ccc4;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             --transition: all 0.3s ease;
         }
 
-        /* Reset et styles de base */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--blanc);
+            color: var(--noir);
             line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--light-color);
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        section {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            position: relative;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: var(--secondary-color);
-            margin: 0 auto;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: var(--secondary-color);
-            color: var(--text-light);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn:hover {
-            background: var(--primary-color);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        /* Header et Navigation */
+        /* Header minimaliste */
         header {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--taupe-clair);
         }
 
         .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .logo span {
-            color: var(--secondary-color);
-        }
-
-        .nav-links {
-            display: flex;
-        }
-
-        .nav-links li {
-            margin-left: 30px;
-        }
-
-        .nav-links a {
-            font-weight: 600;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--secondary-color);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://source.unsplash.com/random/1600x900/?technology') no-repeat center center/cover;
-            color: var(--text-light);
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero p {
             font-size: 1.2rem;
-            margin-bottom: 30px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--noir);
         }
 
-        .hero-btns {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        .instagram-link {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
         }
 
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--text-light);
+        .instagram-link a {
+            color: var(--noir);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: var(--transition);
         }
 
-        .btn-secondary:hover {
-            background: var(--text-light);
-            color: var(--primary-color);
+        .instagram-link a:hover {
+            color: var(--taupe);
         }
 
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 50px;
-            align-items: center;
+        /* Catégories */
+        .categories {
+            text-align: center;
+            padding: 60px 0 40px;
         }
 
-        .about-img {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-
-        .about-text p {
-            margin-bottom: 20px;
-        }
-
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .skill {
-            background: var(--secondary-color);
-            color: var(--text-light);
-            padding: 5px 15px;
-            border-radius: 20px;
+        .category-btn {
+            background: none;
+            border: 1px solid var(--noir);
+            padding: 12px 30px;
+            margin: 0 10px;
+            cursor: pointer;
             font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: var(--transition);
+            color: var(--noir);
         }
 
-        /* Projects Section */
-        .projects {
-            background-color: #f9f9f9;
+        .category-btn.active,
+        .category-btn:hover {
+            background: var(--noir);
+            color: var(--blanc);
         }
 
-        .projects-grid {
+        /* Grille photos */
+        .gallery {
+            padding: 0 0 80px;
+        }
+
+        .photos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 2px;
         }
 
-        .project-card {
-            background: var(--text-light);
-            border-radius: 10px;
+        .photo-item {
+            position: relative;
             overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
+            aspect-ratio: 1;
         }
 
-        .project-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .project-img {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .project-img img {
+        .photo-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
         }
 
-        .project-card:hover .project-img img {
-            transform: scale(1.1);
+        .photo-item:hover img {
+            transform: scale(1.05);
         }
 
-        .project-info {
-            padding: 20px;
+        /* Sections cachées */
+        .category-section {
+            display: none;
         }
 
-        .project-info h3 {
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        .project-info p {
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 15px;
-        }
-
-        .tech {
-            background: var(--light-color);
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-        }
-
-        .project-links {
-            display: flex;
-            gap: 10px;
-        }
-
-        .project-link {
-            font-size: 0.9rem;
-            color: var(--secondary-color);
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .project-link:hover {
-            color: var(--primary-color);
-        }
-
-        /* Contact Section */
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--secondary-color);
-            color: var(--text-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .contact-text h4 {
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            background: var(--primary-color);
-            color: var(--text-light);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--secondary-color);
-            transform: translateY(-5px);
-        }
-
-        .contact-form {
-            background: var(--text-light);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
+        .category-section.active {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        /* Footer */
+        /* Footer minimal */
         footer {
-            background: var(--primary-color);
-            color: var(--text-light);
-            padding: 30px 0;
             text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--taupe-clair);
+            color: var(--taupe);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
         }
 
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-links a {
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .about-content,
-            .contact-content {
-                grid-template-columns: 1fr;
-            }
-
-            .about-img {
-                max-width: 400px;
-                margin: 0 auto;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: var(--primary-color);
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                padding-top: 50px;
-                transition: var(--transition);
+            .photos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
-
-            .nav-links.active {
-                left: 0;
+            
+            .instagram-link {
+                top: 20px;
+                right: 20px;
             }
-
-            .nav-links li {
-                margin: 15px 0;
-            }
-
-            .hamburger {
+            
+            .category-btn {
                 display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-btns {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
+                margin: 10px auto;
                 width: 200px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .section-title h2 {
-                font-size: 2rem;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Instagram Link -->
+    <div class="instagram-link">
+        <a href="https://www.instagram.com/ltad_l/" target="_blank" title="Instagram">
+            📸
+        </a>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="container">
-            <nav>
-                <div class="logo">Mon<span>Portfolio</span></div>
-                <ul class="nav-links">
-                    <li><a href="#accueil">Accueil</a></li>
-                    <li><a href="#apropos">À propos</a></li>
-                    <li><a href="#projets">Projets</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <div class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </nav>
+            <div class="logo">ltad_l</div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="accueil" class="hero">
+    <!-- Catégories -->
+    <section class="categories">
         <div class="container">
-            <div class="hero-content">
-                <h1>Bonjour, je suis <span style="color: var(--secondary-color);">Votre Nom</span></h1>
-                <p>Développeur passionné créant des expériences web innovantes et fonctionnelles</p>
-                <div class="hero-btns">
-                    <a href="#projets" class="btn">Voir mes projets</a>
-                    <a href="#contact" class="btn btn-secondary">Me contacter</a>
+            <button class="category-btn active" data-category="bonnes">Bonnes Photos</button>
+            <button class="category-btn" data-category="essais">Essais</button>
+        </div>
+    </section>
+
+    <!-- Galerie Bonnes Photos -->
+    <section id="bonnes" class="category-section active">
+        <div class="gallery">
+            <div class="photos-grid">
+                <!-- REMPLACEZ CES IMAGES PAR LES VÔTRES -->
+                <!-- 
+                POUR AJOUTER VOS PHOTOS :
+                1. Créez un dossier 'images' dans votre dépôt GitHub
+                2. Téléversez vos photos dans ce dossier
+                3. Remplacez 'images/photo1.jpg' par vos noms de fichiers
+                -->
+                <div class="photo-item">
+                    <img src="images/photo1.jpg" alt="Description de votre photo 1">
+                </div>
+                <div class="photo-item">
+                    <img src="images/photo2.jpg" alt="Description de votre photo 2">
+                </div>
+                <div class="photo-item">
+                    <img src="images/photo3.jpg" alt="Description de votre photo 3">
+                </div>
+                <div class="photo-item">
+                    <img src="images/photo4.jpg" alt="Description de votre photo 4">
+                </div>
+                <div class="photo-item">
+                    <img src="images/photo5.jpg" alt="Description de votre photo 5">
+                </div>
+                <div class="photo-item">
+                    <img src="images/photo6.jpg" alt="Description de votre photo 6">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="apropos" class="about">
-        <div class="container">
-            <div class="section-title">
-                <h2>À propos de moi</h2>
-            </div>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://source.unsplash.com/random/400x400/?portrait" alt="Votre photo">
+    <!-- Galerie Essais -->
+    <section id="essais" class="category-section">
+        <div class="gallery">
+            <div class="photos-grid">
+                <!-- REMPLACEZ CES IMAGES PAR VOS ESSAIS -->
+                <div class="photo-item">
+                    <img src="images/essai1.jpg" alt="Description de votre essai 1">
                 </div>
-                <div class="about-text">
-                    <h3>Développeur Web & Mobile</h3>
-                    <p>Je suis un développeur passionné avec une expertise en création d'applications web et mobiles. J'aime résoudre des problèmes complexes et créer des solutions élégantes et efficaces.</p>
-                    <p>Avec plusieurs années d'expérience dans le développement front-end et back-end, je maîtrise diverses technologies et frameworks modernes.</p>
-                    <div class="skills">
-                        <span class="skill">HTML/CSS</span>
-                        <span class="skill">JavaScript</span>
-                        <span class="skill">React</span>
-                        <span class="skill">Node.js</span>
-                        <span class="skill">Python</span>
-                        <span class="skill">Git</span>
-                        <span class="skill">Responsive Design</span>
-                        <span class="skill">UI/UX</span>
-                    </div>
-                    <a href="#" class="btn" style="margin-top: 20px;">Télécharger mon CV</a>
+                <div class="photo-item">
+                    <img src="images/essai2.jpg" alt="Description de votre essai 2">
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projets" class="projects">
-        <div class="container">
-            <div class="section-title">
-                <h2>Mes Projets</h2>
-            </div>
-            <div class="projects-grid">
-                <!-- Projet 1 -->
-                <div class="project-card">
-                    <div class="project-img">
-                        <img src="https://source.unsplash.com/random/600x400/?web,design" alt="Projet 1">
-                    </div>
-                    <div class="project-info">
-                        <h3>Application E-commerce</h3>
-                        <p>Une plateforme e-commerce complète avec système de paiement et gestion des stocks.</p>
-                        <div class="project-tech">
-                            <span class="tech">React</span>
-                            <span class="tech">Node.js</span>
-                            <span class="tech">MongoDB</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link">Voir le projet</a>
-                            <a href="#" class="project-link">Code source</a>
-                        </div>
-                    </div>
+                <div class="photo-item">
+                    <img src="images/essai3.jpg" alt="Description de votre essai 3">
                 </div>
-                <!-- Projet 2 -->
-                <div class="project-card">
-                    <div class="project-img">
-                        <img src="https://source.unsplash.com/random/600x400/?app,mobile" alt="Projet 2">
-                    </div>
-                    <div class="project-info">
-                        <h3>Application Météo</h3>
-                        <p>Application mobile de prévisions météorologiques avec interface intuitive.</p>
-                        <div class="project-tech">
-                            <span class="tech">React Native</span>
-                            <span class="tech">API REST</span>
-                            <span class="tech">Firebase</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link">Voir le projet</a>
-                            <a href="#" class="project-link">Code source</a>
-                        </div>
-                    </div>
+                <div class="photo-item">
+                    <img src="images/essai4.jpg" alt="Description de votre essai 4">
                 </div>
-                <!-- Projet 3 -->
-                <div class="project-card">
-                    <div class="project-img">
-                        <img src="https://source.unsplash.com/random/600x400/?dashboard,analytics" alt="Projet 3">
-                    </div>
-                    <div class="project-info">
-                        <h3>Tableau de Bord Analytics</h3>
-                        <p>Dashboard interactif pour visualiser et analyser des données en temps réel.</p>
-                        <div class="project-tech">
-                            <span class="tech">Vue.js</span>
-                            <span class="tech">D3.js</span>
-                            <span class="tech">Express</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link">Voir le projet</a>
-                            <a href="#" class="project-link">Code source</a>
-                        </div>
-                    </div>
+                <div class="photo-item">
+                    <img src="images/essai5.jpg" alt="Description de votre essai 5">
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-title">
-                <h2>Contactez-moi</h2>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i>📧</i>
-                        </div>
-                        <div class="contact-text">
-                            <h4>Email</h4>
-                            <p>votre.email@example.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i>📱</i>
-                        </div>
-                        <div class="contact-text">
-                            <h4>Téléphone</h4>
-                            <p>+33 1 23 45 67 89</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i>📍</i>
-                        </div>
-                        <div class="contact-text">
-                            <h4>Localisation</h4>
-                            <p>Paris, France</p>
-                        </div>
-                    </div>
-                    <div class="social-links">
-                        <a href="#" class="social-link">in</a>
-                        <a href="#" class="social-link">gh</a>
-                        <a href="#" class="social-link">tw</a>
-                        <a href="#" class="social-link">ig</a>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <form>
-                        <div class="form-group">
-                            <label for="name">Nom</label>
-                            <input type="text" id="name" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Sujet</label>
-                            <input type="text" id="subject" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" class="form-control" required></textarea>
-                        </div>
-                        <button type="submit" class="btn">Envoyer le message</button>
-                    </form>
+                <div class="photo-item">
+                    <img src="images/essai6.jpg" alt="Description de votre essai 6">
                 </div>
             </div>
         </div>
@@ -726,39 +244,28 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <div class="logo">Mon<span>Portfolio</span></div>
-                <div class="footer-links">
-                    <a href="#accueil">Accueil</a>
-                    <a href="#apropos">À propos</a>
-                    <a href="#projets">Projets</a>
-                    <a href="#contact">Contact</a>
-                </div>
-                <p>&copy; 2023 Votre Nom. Tous droits réservés.</p>
-            </div>
+            <p>ltad_l © 2024</p>
         </div>
     </footer>
 
     <script>
-        // Menu mobile
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
+        // Navigation entre catégories
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const categorySections = document.querySelectorAll('.category-section');
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Fermer le menu en cliquant sur un lien
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Retirer active de tous
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                categorySections.forEach(s => s.classList.remove('active'));
+                
+                // Activer le bouton cliqué
+                btn.classList.add('active');
+                
+                // Afficher la section correspondante
+                const category = btn.getAttribute('data-category');
+                document.getElementById(category).classList.add('active');
             });
-        });
-
-        // Animation au défilement
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            header.classList.toggle('scrolled', window.scrollY > 50);
         });
     </script>
 </body>
