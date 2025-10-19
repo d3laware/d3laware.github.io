@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HERAULT Adel - Photographe & Artiste 3D</title>
     <style>
-        /* Variables couleurs luxe */
         :root {
             --noir: #000000;
             --blanc: #ffffff;
@@ -116,23 +115,30 @@
             filter: grayscale(0%);
         }
 
-        .debug-info {
+        .solution-box {
             background: var(--gris-fonce);
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--taupe);
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid var(--or);
             color: var(--taupe);
-            font-size: 0.9rem;
+            text-align: center;
         }
 
-        .debug-info.success {
-            border-color: var(--or);
+        .solution-box h3 {
             color: var(--or);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
         }
 
-        .debug-info.error {
-            border-color: #ff6b6b;
-            color: #ff6b6b;
+        .solution-steps {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .solution-steps li {
+            margin-bottom: 10px;
+            padding-left: 10px;
         }
 
         footer {
@@ -176,10 +182,38 @@
 
     <section class="gallery">
         <div class="container">
-            <div id="debug-container"></div>
+            <div class="solution-box">
+                <h3>🚨 SOLUTION REQUISE</h3>
+                <p>Votre photo P1070124.jpg n'est pas accessible sur GitHub.</p>
+                <div class="solution-steps">
+                    <p><strong>Étapes à suivre :</strong></p>
+                    <ol>
+                        <li>Ouvrez Git Bash dans votre dossier <code>d3laware.github.io</code></li>
+                        <li>Exécutez ces commandes :</li>
+                    </ol>
+                    <div style="background: var(--noir); padding: 15px; margin: 15px 0; border-radius: 5px;">
+                        <code style="color: var(--or);">
+                            git add sampleFolder/P1070124.jpg<br>
+                            git commit -m "Ajout photo portfolio"<br>
+                            git push origin main
+                        </code>
+                    </div>
+                    <li>Attendez 5-10 minutes que GitHub se mette à jour</li>
+                    <li>Rafraîchissez cette page</li>
+                </div>
+                <p><strong>Vérifiez que votre photo est bien sur GitHub :</strong><br>
+                <a href="https://github.com/d3laware/d3laware.github.io/tree/main/sampleFolder" target="_blank" style="color: var(--or);">
+                    👉 Cliquez ici pour voir le dossier sampleFolder
+                </a></p>
+            </div>
+
             <div id="photos-grid" class="photos-grid">
+                <!-- La galerie s'affichera automatiquement une fois les photos uploadées -->
                 <div class="photo-item">
-                    <div class="debug-info">Chargement en cours...</div>
+                    <div style="padding: 20px; text-align: center; color: var(--taupe);">
+                        <p>🎯 Une fois les photos uploadées sur GitHub,</p>
+                        <p>elles apparaîtront ici automatiquement.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,64 +226,41 @@
     </footer>
 
     <script>
-        // TEST DIRECT DE L'IMAGE
-        const testImage = new Image();
-        const debugContainer = document.getElementById('debug-container');
-        const photosGrid = document.getElementById('photos-grid');
+        // Version SIMPLIFIÉE - juste P1070124.jpg
+        const mesPhotos = ['sampleFolder/P1070124.jpg'];
         
-        const imageUrl = 'sampleFolder/P1070124.jpg';
-        const fullUrl = 'https://d3laware.github.io/sampleFolder/P1070124.jpg';
-        
-        function updateDebug(message, type = 'info') {
-            debugContainer.innerHTML = `<div class="debug-info ${type}">${message}</div>`;
+        function chargerGalerie() {
+            const grid = document.getElementById('photos-grid');
+            grid.innerHTML = '';
+            
+            mesPhotos.forEach((cheminPhoto) => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                
+                const img = document.createElement('img');
+                img.src = cheminPhoto;
+                img.alt = 'Photo HERAULT Adel';
+                img.loading = 'lazy';
+                
+                img.onload = function() {
+                    console.log('✅ Photo chargée :', cheminPhoto);
+                };
+                
+                img.onerror = function() {
+                    console.log('❌ Photo non trouvée :', cheminPhoto);
+                    // On ne fait rien - le message de solution reste affiché
+                };
+                
+                photoItem.appendChild(img);
+                grid.appendChild(photoItem);
+            });
         }
         
-        // Test de l'image
-        testImage.onload = function() {
-            updateDebug(`✅ SUCCÈS : L'image P1070124.jpg est chargée !`, 'success');
-            photosGrid.innerHTML = `
-                <div class="photo-item">
-                    <img src="${imageUrl}" alt="HERAULT Adel - P1070124" loading="lazy">
-                </div>
-            `;
-        };
+        // Essayer de charger dans 2 secondes
+        setTimeout(chargerGalerie, 2000);
         
-        testImage.onerror = function() {
-            updateDebug(`
-                ❌ ERREUR : L'image P1070124.jpg n'est pas accessible<br><br>
-                <strong>Problèmes possibles :</strong><br>
-                1. La photo n'est pas dans le dossier sampleFolder sur GitHub<br>
-                2. Le nom de fichier n'est pas exactement "P1070124.jpg"<br>
-                3. La photo est trop lourde (> 100MB)<br>
-                4. GitHub Pages met du temps à se mettre à jour<br><br>
-                <strong>Vérifiez :</strong><br>
-                - <a href="${fullUrl}" target="_blank">Cliquez ici pour tester l'URL directe</a><br>
-                - <a href="https://github.com/d3laware/d3laware.github.io/tree/main/sampleFolder" target="_blank">Vérifiez le dossier sampleFolder sur GitHub</a>
-            `, 'error');
-            
-            // Montrer l'URL exacte qu'on essaie de charger
-            photosGrid.innerHTML = `
-                <div class="photo-item">
-                    <div class="debug-info error">
-                        <strong>URL testée :</strong><br>
-                        ${imageUrl}<br><br>
-                        <strong>URL complète :</strong><br>
-                        ${fullUrl}
-                    </div>
-                </div>
-            `;
-        };
-        
-        // Démarrer le test
-        updateDebug(`🔍 Test de chargement : ${imageUrl}`);
-        testImage.src = imageUrl;
-        
-        // Forcer le rechargement après 10 secondes
-        setTimeout(() => {
-            if (!testImage.complete) {
-                updateDebug('⏳ Chargement lent... patientez ou rafraîchissez la page', 'info');
-            }
-        }, 10000);
+        // Recharger toutes les 30 secondes pour voir si les photos sont uploadées
+        setInterval(chargerGalerie, 30000);
     </script>
 </body>
 </html>
