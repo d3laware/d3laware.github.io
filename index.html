@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ltad_l - Portfolio Photo</title>
+    <title>HERAULT Adel - Photographe & Artiste 3D</title>
     <style>
-        /* Variables en noir, blanc et taupe */
+        /* Variables couleurs luxe */
         :root {
-            --noir: #1a1a1a;
+            --noir: #000000;
+            --blanc: #ffffff;
             --taupe: #8a7f70;
-            --blanc: #f5f5f5;
-            --taupe-clair: #d4ccc4;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --transition: all 0.3s ease;
+            --or: #c4a86f;
+            --gris-fonce: #1a1a1a;
+            --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* Reset */
+        /* Reset luxe */
         * {
             margin: 0;
             padding: 0;
@@ -24,83 +24,97 @@
 
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--blanc);
-            color: var(--noir);
+            background-color: var(--noir);
+            color: var(--blanc);
             line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 40px;
         }
 
-        /* Header minimaliste */
+        /* Header luxe */
         header {
-            padding: 30px 0;
+            padding: 40px 0;
             text-align: center;
-            border-bottom: 1px solid var(--taupe-clair);
+            border-bottom: 1px solid var(--taupe);
         }
 
-        .logo {
-            font-size: 1.2rem;
-            letter-spacing: 3px;
+        .nom {
+            font-size: 1.4rem;
+            letter-spacing: 8px;
             text-transform: uppercase;
-            color: var(--noir);
+            color: var(--blanc);
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .titre {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: var(--taupe);
+            text-transform: uppercase;
+            font-weight: 300;
         }
 
         .instagram-link {
             position: fixed;
-            top: 30px;
-            right: 30px;
+            top: 40px;
+            right: 40px;
             z-index: 1000;
         }
 
         .instagram-link a {
-            color: var(--noir);
-            font-size: 1.5rem;
+            color: var(--blanc);
+            font-size: 1.3rem;
             text-decoration: none;
             transition: var(--transition);
         }
 
         .instagram-link a:hover {
-            color: var(--taupe);
+            color: var(--or);
         }
 
         /* Catégories */
         .categories {
             text-align: center;
-            padding: 60px 0 40px;
+            padding: 80px 0 60px;
         }
 
         .category-btn {
             background: none;
-            border: 1px solid var(--noir);
-            padding: 12px 30px;
-            margin: 0 10px;
+            border: 1px solid var(--taupe);
+            padding: 15px 40px;
+            margin: 0 15px;
             cursor: pointer;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
             transition: var(--transition);
-            color: var(--noir);
+            color: var(--taupe);
+            font-weight: 300;
         }
 
         .category-btn.active,
         .category-btn:hover {
-            background: var(--noir);
-            color: var(--blanc);
+            background: var(--blanc);
+            color: var(--noir);
+            border-color: var(--blanc);
         }
 
-        /* Grille photos */
+        /* Grille photos luxe */
         .gallery {
-            padding: 0 0 80px;
+            padding: 0 0 100px;
         }
 
         .photos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2px;
+            gap: 1px;
         }
 
         .photo-item {
@@ -114,29 +128,37 @@
             height: 100%;
             object-fit: cover;
             transition: var(--transition);
+            filter: grayscale(20%);
         }
 
         .photo-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.03);
+            filter: grayscale(0%);
         }
 
         /* Sections cachées */
         .category-section {
             display: none;
+            animation: fadeIn 0.8s ease;
         }
 
         .category-section.active {
             display: block;
         }
 
-        /* Footer minimal */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Footer luxe */
         footer {
             text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid var(--taupe-clair);
+            padding: 60px 0;
+            border-top: 1px solid var(--taupe);
             color: var(--taupe);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
         }
 
         /* Responsive */
@@ -153,7 +175,16 @@
             .category-btn {
                 display: block;
                 margin: 10px auto;
-                width: 200px;
+                width: 250px;
+            }
+            
+            .container {
+                padding: 0 20px;
+            }
+            
+            .nom {
+                font-size: 1.1rem;
+                letter-spacing: 6px;
             }
         }
     </style>
@@ -169,15 +200,16 @@
     <!-- Header -->
     <header>
         <div class="container">
-            <div class="logo">ltad_l</div>
+            <div class="nom">HERAULT Adel</div>
+            <div class="titre">Photographe & Artiste 3D Débutant</div>
         </div>
     </header>
 
     <!-- Catégories -->
     <section class="categories">
         <div class="container">
-            <button class="category-btn active" data-category="bonnes">Bonnes Photos</button>
-            <button class="category-btn" data-category="essais">Essais</button>
+            <button class="category-btn active" data-category="bonnes">Sélection</button>
+            <button class="category-btn" data-category="essais">Explorations</button>
         </div>
     </section>
 
@@ -185,30 +217,24 @@
     <section id="bonnes" class="category-section active">
         <div class="gallery">
             <div class="photos-grid">
-                <!-- REMPLACEZ CES IMAGES PAR LES VÔTRES -->
-                <!-- 
-                POUR AJOUTER VOS PHOTOS :
-                1. Créez un dossier 'images' dans votre dépôt GitHub
-                2. Téléversez vos photos dans ce dossier
-                3. Remplacez 'images/photo1.jpg' par vos noms de fichiers
-                -->
+                <!-- REMPLACEZ CES IMAGES PAR VOS MEILLEURES PHOTOS -->
                 <div class="photo-item">
-                    <img src="images/photo1.jpg" alt="Description de votre photo 1">
+                    <img src="sampleFolder/photo1.jpg" alt="Titre de votre photo 1">
                 </div>
                 <div class="photo-item">
-                    <img src="images/photo2.jpg" alt="Description de votre photo 2">
+                    <img src="sampleFolder/photo2.jpg" alt="Titre de votre photo 2">
                 </div>
                 <div class="photo-item">
-                    <img src="images/photo3.jpg" alt="Description de votre photo 3">
+                    <img src="sampleFolder/photo3.jpg" alt="Titre de votre photo 3">
                 </div>
                 <div class="photo-item">
-                    <img src="images/photo4.jpg" alt="Description de votre photo 4">
+                    <img src="sampleFolder/photo4.jpg" alt="Titre de votre photo 4">
                 </div>
                 <div class="photo-item">
-                    <img src="images/photo5.jpg" alt="Description de votre photo 5">
+                    <img src="sampleFolder/photo5.jpg" alt="Titre de votre photo 5">
                 </div>
                 <div class="photo-item">
-                    <img src="images/photo6.jpg" alt="Description de votre photo 6">
+                    <img src="sampleFolder/photo6.jpg" alt="Titre de votre photo 6">
                 </div>
             </div>
         </div>
@@ -220,22 +246,22 @@
             <div class="photos-grid">
                 <!-- REMPLACEZ CES IMAGES PAR VOS ESSAIS -->
                 <div class="photo-item">
-                    <img src="images/essai1.jpg" alt="Description de votre essai 1">
+                    <img src="sampleFolder/essai1.jpg" alt="Description de votre essai 1">
                 </div>
                 <div class="photo-item">
-                    <img src="images/essai2.jpg" alt="Description de votre essai 2">
+                    <img src="sampleFolder/essai2.jpg" alt="Description de votre essai 2">
                 </div>
                 <div class="photo-item">
-                    <img src="images/essai3.jpg" alt="Description de votre essai 3">
+                    <img src="sampleFolder/essai3.jpg" alt="Description de votre essai 3">
                 </div>
                 <div class="photo-item">
-                    <img src="images/essai4.jpg" alt="Description de votre essai 4">
+                    <img src="sampleFolder/essai4.jpg" alt="Description de votre essai 4">
                 </div>
                 <div class="photo-item">
-                    <img src="images/essai5.jpg" alt="Description de votre essai 5">
+                    <img src="sampleFolder/essai5.jpg" alt="Description de votre essai 5">
                 </div>
                 <div class="photo-item">
-                    <img src="images/essai6.jpg" alt="Description de votre essai 6">
+                    <img src="sampleFolder/essai6.jpg" alt="Description de votre essai 6">
                 </div>
             </div>
         </div>
@@ -244,7 +270,7 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>ltad_l © 2024</p>
+            <p>HERAULT Adel © 2024</p>
         </div>
     </footer>
 
