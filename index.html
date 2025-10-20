@@ -104,7 +104,19 @@
             filter: grayscale(0%);
         }
         
-        /* LIGHTBOX LUXE */
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--taupe);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* LIGHTBOX */
         .lightbox {
             display: none;
             position: fixed;
@@ -242,17 +254,8 @@
     <section class="gallery">
         <div class="container">
             <div class="photos-grid" id="gallery-grid">
-                <!-- Miniatures de qualité réduite -->
-                <div class="photo-item" data-fullsize="https://github.com/d3laware/d3laware.github.io/raw/main/sampleFolder/P1070124.jpg">
-                    <img src="./sampleFolder/P1070124.jpg" alt="HERAULT Adel - Photographie 1">
-                </div>
-                
-                <!-- Ajoutez d'autres photos ici -->
-                <!--
-                <div class="photo-item" data-fullsize="URL_PHOTO_HD_2">
-                    <img src="URL_MINIATURE_2" alt="Photo 2">
-                </div>
-                -->
+                <!-- GÉNÉRÉ AUTOMATIQUEMENT PAR JAVASCRIPT -->
+                <div class="photo-placeholder">Chargement de la galerie...</div>
             </div>
         </div>
     </section>
@@ -277,36 +280,96 @@
     </footer>
 
     <script>
-        // GALLERY AVEC LIGHTBOX POUR GIT LFS
-        class Gallery {
+        // GALERIE AUTOMATIQUE - Détecte toutes les photos
+        class AutoGallery {
             constructor() {
-                this.currentIndex = 0;
                 this.photos = [];
+                this.currentIndex = 0;
+                this.baseUrl = 'https://github.com/d3laware/d3laware.github.io/raw/main/sampleFolder/';
                 this.init();
             }
             
-            init() {
-                // Récupère toutes les photos de la galerie
-                this.photos = Array.from(document.querySelectorAll('.photo-item'));
+            async init() {
+                await this.loadGallery();
+                this.initLightbox();
+            }
+            
+            async loadGallery() {
+                const grid = document.getElementById('gallery-grid');
+                grid.innerHTML = '<div class="photo-placeholder">Scan du dossier sampleFolder...</div>';
                 
-                // Ajoute les événements click
-                this.photos.forEach((photo, index) => {
-                    photo.addEventListener('click', () => this.openLightbox(index));
-                });
-                
-                // Lightbox events
+                try {
+                    // Récupère la liste des photos depuis l'API GitHub
+                    const response = await fetch('https://api.github.com/repos/d3laware/d3laware.github.io/contents/sampleFolder');
+                    const files = await response.json();
+                    
+                    // Filtre seulement les images
+                    this.photos = files.filter(file => 
+                        file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                    );
+                    
+                    if (this.photos.length === 0) {
+                        grid.innerHTML = '<div class="photo-placeholder">Aucune photo trouvée dans sampleFolder</div>';
+                        return;
+                    }
+                    
+                    // Génère la galerie
+                    grid.innerHTML = '';
+                    this.photos.forEach((photo, index) => {
+                        const photoItem = document.createElement('div');
+                        photoItem.className = 'photo-item';
+                        photoItem.setAttribute('data-index', index);
+                        
+                        // URL Git LFS pour la version HD
+                        const hdUrl = this.baseUrl + photo.name;
+                        
+                        // Placeholder élégant pour la miniature
+                        photoItem.innerHTML = `
+                            <div class="photo-placeholder">
+                                ${photo.name}<br>
+                                <small>Cliquez pour voir en HD</small>
+                            </div>
+                        `;
+                        
+                        // Essaie de charger la miniature
+                        const img = new Image();
+                        img.onload = () => {
+                            photoItem.innerHTML = `<img src="${photo.download_url}" alt="${photo.name}">`;
+                        };
+                        img.onerror = () => {
+                            // Garde le placeholder si la miniature échoue
+                            console.log('Miniature non disponible:', photo.name);
+                        };
+                        img.src = photo.download_url;
+                        
+                        photoItem.addEventListener('click', () => this.openLightbox(index));
+                        grid.appendChild(photoItem);
+                    });
+                    
+                    console.log(`✅ ${this.photos.length} photos chargées automatiquement`);
+                    
+                } catch (error) {
+                    console.error('Erreur chargement galerie:', error);
+                    grid.innerHTML = `
+                        <div class="photo-placeholder">
+                            Erreur de chargement<br>
+                            <small>Vérifiez que sampleFolder contient des photos</small>
+                        </div>
+                    `;
+                }
+            }
+            
+            initLightbox() {
                 document.getElementById('lightbox-close').addEventListener('click', () => this.closeLightbox());
                 document.getElementById('lightbox-prev').addEventListener('click', () => this.prevPhoto());
                 document.getElementById('lightbox-next').addEventListener('click', () => this.nextPhoto());
                 
-                // Fermer avec ESC
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') this.closeLightbox();
                     if (e.key === 'ArrowLeft') this.prevPhoto();
                     if (e.key === 'ArrowRight') this.nextPhoto();
                 });
                 
-                // Fermer en cliquant sur le fond
                 document.getElementById('lightbox').addEventListener('click', (e) => {
                     if (e.target === document.getElementById('lightbox')) {
                         this.closeLightbox();
@@ -317,33 +380,28 @@
             openLightbox(index) {
                 this.currentIndex = index;
                 const photo = this.photos[index];
-                const fullsizeUrl = photo.getAttribute('data-fullsize');
-                const altText = photo.querySelector('img').alt;
+                const hdUrl = this.baseUrl + photo.name;
                 
-                // Affiche la lightbox
                 document.getElementById('lightbox').classList.add('active');
                 
-                // Charge l'image HD
                 const lightboxImg = document.getElementById('lightbox-img');
                 const photoInfo = document.getElementById('photo-info');
                 
-                // Message de chargement
                 lightboxImg.src = '';
-                lightboxImg.alt = altText;
-                photoInfo.textContent = 'Chargement de la version HD...';
+                photoInfo.textContent = `Chargement ${photo.name}...`;
                 
-                // Charge l'image HD depuis Git LFS
+                // Charge la version HD depuis Git LFS
                 const hdImage = new Image();
                 hdImage.onload = () => {
-                    lightboxImg.src = fullsizeUrl;
-                    photoInfo.textContent = altText;
+                    lightboxImg.src = hdUrl;
+                    photoInfo.textContent = `${photo.name} • HERAULT Adel`;
                 };
                 hdImage.onerror = () => {
-                    // Fallback: utilise la version miniature
-                    lightboxImg.src = photo.querySelector('img').src;
-                    photoInfo.textContent = altText + ' (qualité réduite - Git LFS)';
+                    // Fallback sur l'URL de téléchargement standard
+                    lightboxImg.src = photo.download_url;
+                    photoInfo.textContent = `${photo.name} • HERAULT Adel (qualité standard)`;
                 };
-                hdImage.src = fullsizeUrl;
+                hdImage.src = hdUrl;
             }
             
             closeLightbox() {
@@ -361,18 +419,10 @@
             }
         }
         
-        // Initialise la galerie quand la page est prête
+        // Démarre la galerie automatique
         document.addEventListener('DOMContentLoaded', () => {
-            new Gallery();
+            new AutoGallery();
         });
-        
-        // Fallback pour Git LFS - test de l'image
-        const testImage = new Image();
-        testImage.onerror = function() {
-            console.log('Git LFS: Les miniatures ne sont pas accessibles');
-            // On pourrait afficher un message ou utiliser des images placeholder
-        };
-        testImage.src = './sampleFolder/P1070124.jpg';
     </script>
 </body>
 </html>
