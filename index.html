@@ -10,8 +10,11 @@
             --blanc: #ffffff; 
             --taupe: #8a7f70; 
             --or: #c4a86f;
+            --gris-fonce: #1a1a1a;
         }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
             font-family: 'Helvetica Neue', Arial, sans-serif; 
             background: var(--noir); 
@@ -20,12 +23,15 @@
             font-weight: 300;
             letter-spacing: 0.5px;
         }
+        
         .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        
         header { 
             padding: 40px 0; 
             text-align: center; 
             border-bottom: 1px solid var(--taupe); 
         }
+        
         .nom { 
             font-size: 1.4rem; 
             letter-spacing: 8px; 
@@ -33,6 +39,7 @@
             margin-bottom: 10px; 
             font-weight: 300;
         }
+        
         .titre { 
             font-size: 0.9rem; 
             letter-spacing: 3px; 
@@ -40,12 +47,14 @@
             text-transform: uppercase; 
             font-weight: 300;
         }
+        
         .instagram-link { 
             position: fixed; 
             top: 40px; 
             right: 40px; 
             z-index: 1000; 
         }
+        
         .instagram-link a { 
             color: var(--blanc); 
             font-size: 1.3rem; 
@@ -60,21 +69,28 @@
             line-height: 25px; 
             transition: all 0.3s ease;
         }
+        
         .instagram-link a:hover {
             color: var(--or);
             background: rgba(255,255,255,0.1);
         }
+        
         .gallery { padding: 80px 0 100px; }
+        
         .photos-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
             gap: 2px; 
         }
+        
         .photo-item { 
             aspect-ratio: 1; 
-            background: #1a1a1a;
+            background: var(--gris-fonce);
             overflow: hidden;
+            cursor: pointer;
+            position: relative;
         }
+        
         .photo-item img { 
             width: 100%; 
             height: 100%; 
@@ -82,17 +98,110 @@
             transition: all 0.4s ease;
             filter: grayscale(30%);
         }
+        
         .photo-item:hover img {
             transform: scale(1.05);
             filter: grayscale(0%);
         }
-        .lfs-warning {
-            background: #2a2a2a;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--or);
-            text-align: left;
+        
+        /* LIGHTBOX LUXE */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+        
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        }
+        
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: var(--noir);
+            color: var(--blanc);
+            border: 1px solid var(--taupe);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .lightbox-close:hover {
+            background: var(--or);
+            color: var(--noir);
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+        }
+        
+        .lightbox-prev, .lightbox-next {
+            background: var(--noir);
+            color: var(--blanc);
+            border: 1px solid var(--taupe);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .lightbox-prev:hover, .lightbox-next:hover {
+            background: var(--or);
+            color: var(--noir);
+        }
+        
+        .photo-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--taupe);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
         footer {
             text-align: center;
             padding: 60px 0;
@@ -100,6 +209,21 @@
             color: var(--taupe);
             font-size: 0.7rem;
             letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .photos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            .lightbox-prev, .lightbox-next {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            .lightbox-close {
+                top: 20px;
+                right: 20px;
+            }
         }
     </style>
 </head>
@@ -117,27 +241,34 @@
 
     <section class="gallery">
         <div class="container">
-            <div class="lfs-warning">
-                <strong>Git LFS détecté :</strong> Votre photo est gérée par Git Large File Storage.
-                Utilisez l'URL directe du fichier LFS.
-            </div>
-            
-            <div class="photos-grid">
-                <!-- SOLUTION 1: URL GitHub Pages standard -->
-                <div class="photo-item">
-                    <img src="./sampleFolder/P1070124.jpg" alt="HERAULT Adel - Photographie" 
-                         onerror="console.log('Git LFS image not accessible via standard path')">
+            <div class="photos-grid" id="gallery-grid">
+                <!-- Miniatures de qualité réduite -->
+                <div class="photo-item" data-fullsize="https://github.com/d3laware/d3laware.github.io/raw/main/sampleFolder/P1070124.jpg">
+                    <img src="./sampleFolder/P1070124.jpg" alt="HERAULT Adel - Photographie 1">
                 </div>
-            </div>
-            
-            <div class="lfs-warning" style="margin-top: 30px;">
-                <strong>Solution alternative :</strong><br>
-                1. Téléchargez votre photo depuis <a href="https://github.com/d3laware/d3laware.github.io/raw/main/sampleFolder/P1070124.jpg" style="color: var(--or);">ce lien</a><br>
-                2. Re-uploadez la sans Git LFS<br>
-                3. Ou utilisez un service d'hébergement d'images comme imgur.com
+                
+                <!-- Ajoutez d'autres photos ici -->
+                <!--
+                <div class="photo-item" data-fullsize="URL_PHOTO_HD_2">
+                    <img src="URL_MINIATURE_2" alt="Photo 2">
+                </div>
+                -->
             </div>
         </div>
     </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <img class="lightbox-img" id="lightbox-img" src="" alt="">
+            <div class="photo-info" id="photo-info">HERAULT Adel - Photographie</div>
+        </div>
+        <button class="lightbox-close" id="lightbox-close">✕</button>
+        <div class="lightbox-nav">
+            <button class="lightbox-prev" id="lightbox-prev">‹</button>
+            <button class="lightbox-next" id="lightbox-next">›</button>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -146,15 +277,100 @@
     </footer>
 
     <script>
-        // Test automatique de l'image
+        // GALLERY AVEC LIGHTBOX POUR GIT LFS
+        class Gallery {
+            constructor() {
+                this.currentIndex = 0;
+                this.photos = [];
+                this.init();
+            }
+            
+            init() {
+                // Récupère toutes les photos de la galerie
+                this.photos = Array.from(document.querySelectorAll('.photo-item'));
+                
+                // Ajoute les événements click
+                this.photos.forEach((photo, index) => {
+                    photo.addEventListener('click', () => this.openLightbox(index));
+                });
+                
+                // Lightbox events
+                document.getElementById('lightbox-close').addEventListener('click', () => this.closeLightbox());
+                document.getElementById('lightbox-prev').addEventListener('click', () => this.prevPhoto());
+                document.getElementById('lightbox-next').addEventListener('click', () => this.nextPhoto());
+                
+                // Fermer avec ESC
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.closeLightbox();
+                    if (e.key === 'ArrowLeft') this.prevPhoto();
+                    if (e.key === 'ArrowRight') this.nextPhoto();
+                });
+                
+                // Fermer en cliquant sur le fond
+                document.getElementById('lightbox').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('lightbox')) {
+                        this.closeLightbox();
+                    }
+                });
+            }
+            
+            openLightbox(index) {
+                this.currentIndex = index;
+                const photo = this.photos[index];
+                const fullsizeUrl = photo.getAttribute('data-fullsize');
+                const altText = photo.querySelector('img').alt;
+                
+                // Affiche la lightbox
+                document.getElementById('lightbox').classList.add('active');
+                
+                // Charge l'image HD
+                const lightboxImg = document.getElementById('lightbox-img');
+                const photoInfo = document.getElementById('photo-info');
+                
+                // Message de chargement
+                lightboxImg.src = '';
+                lightboxImg.alt = altText;
+                photoInfo.textContent = 'Chargement de la version HD...';
+                
+                // Charge l'image HD depuis Git LFS
+                const hdImage = new Image();
+                hdImage.onload = () => {
+                    lightboxImg.src = fullsizeUrl;
+                    photoInfo.textContent = altText;
+                };
+                hdImage.onerror = () => {
+                    // Fallback: utilise la version miniature
+                    lightboxImg.src = photo.querySelector('img').src;
+                    photoInfo.textContent = altText + ' (qualité réduite - Git LFS)';
+                };
+                hdImage.src = fullsizeUrl;
+            }
+            
+            closeLightbox() {
+                document.getElementById('lightbox').classList.remove('active');
+            }
+            
+            prevPhoto() {
+                this.currentIndex = (this.currentIndex - 1 + this.photos.length) % this.photos.length;
+                this.openLightbox(this.currentIndex);
+            }
+            
+            nextPhoto() {
+                this.currentIndex = (this.currentIndex + 1) % this.photos.length;
+                this.openLightbox(this.currentIndex);
+            }
+        }
+        
+        // Initialise la galerie quand la page est prête
+        document.addEventListener('DOMContentLoaded', () => {
+            new Gallery();
+        });
+        
+        // Fallback pour Git LFS - test de l'image
         const testImage = new Image();
-        testImage.onload = function() {
-            console.log('✅ Photo accessible via Git LFS');
-        };
         testImage.onerror = function() {
-            console.log('❌ Photo non accessible - Problème Git LFS');
-            document.querySelector('.lfs-warning').innerHTML += 
-                '<br><span style="color: #ff6b6b;">Erreur: L\'image LFS n\'est pas accessible via le navigateur.</span>';
+            console.log('Git LFS: Les miniatures ne sont pas accessibles');
+            // On pourrait afficher un message ou utiliser des images placeholder
         };
         testImage.src = './sampleFolder/P1070124.jpg';
     </script>
