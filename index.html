@@ -104,7 +104,7 @@
             filter: grayscale(0%);
         }
         
-        .photo-placeholder {
+        .photo-loading {
             width: 100%;
             height: 100%;
             display: flex;
@@ -112,8 +112,7 @@
             justify-content: center;
             color: var(--taupe);
             font-size: 0.8rem;
-            text-align: center;
-            padding: 20px;
+            background: var(--gris-fonce);
         }
         
         /* LIGHTBOX */
@@ -254,8 +253,7 @@
     <section class="gallery">
         <div class="container">
             <div class="photos-grid" id="gallery-grid">
-                <!-- GÉNÉRÉ AUTOMATIQUEMENT PAR JAVASCRIPT -->
-                <div class="photo-placeholder">Chargement de la galerie...</div>
+                <div class="photo-loading">Chargement de la galerie...</div>
             </div>
         </div>
     </section>
@@ -280,8 +278,8 @@
     </footer>
 
     <script>
-        // GALERIE AUTOMATIQUE - Détecte toutes les photos
-        class AutoGallery {
+        // GALERIE AVEC MINIATURES BASSE RÉSOLUTION
+        class SmartGallery {
             constructor() {
                 this.photos = [];
                 this.currentIndex = 0;
@@ -296,67 +294,73 @@
             
             async loadGallery() {
                 const grid = document.getElementById('gallery-grid');
-                grid.innerHTML = '<div class="photo-placeholder">Scan du dossier sampleFolder...</div>';
+                grid.innerHTML = '<div class="photo-loading">Scan des photos...</div>';
                 
                 try {
-                    // Récupère la liste des photos depuis l'API GitHub
+                    // Récupère la liste des photos
                     const response = await fetch('https://api.github.com/repos/d3laware/d3laware.github.io/contents/sampleFolder');
                     const files = await response.json();
                     
-                    // Filtre seulement les images
+                    // Filtre les images
                     this.photos = files.filter(file => 
                         file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)
                     );
                     
                     if (this.photos.length === 0) {
-                        grid.innerHTML = '<div class="photo-placeholder">Aucune photo trouvée dans sampleFolder</div>';
+                        grid.innerHTML = '<div class="photo-loading">Aucune photo trouvée</div>';
                         return;
                     }
                     
-                    // Génère la galerie
+                    // Crée la galerie avec miniatures basse résolution
                     grid.innerHTML = '';
                     this.photos.forEach((photo, index) => {
-                        const photoItem = document.createElement('div');
-                        photoItem.className = 'photo-item';
-                        photoItem.setAttribute('data-index', index);
-                        
-                        // URL Git LFS pour la version HD
-                        const hdUrl = this.baseUrl + photo.name;
-                        
-                        // Placeholder élégant pour la miniature
-                        photoItem.innerHTML = `
-                            <div class="photo-placeholder">
-                                ${photo.name}<br>
-                                <small>Cliquez pour voir en HD</small>
-                            </div>
-                        `;
-                        
-                        // Essaie de charger la miniature
-                        const img = new Image();
-                        img.onload = () => {
-                            photoItem.innerHTML = `<img src="${photo.download_url}" alt="${photo.name}">`;
-                        };
-                        img.onerror = () => {
-                            // Garde le placeholder si la miniature échoue
-                            console.log('Miniature non disponible:', photo.name);
-                        };
-                        img.src = photo.download_url;
-                        
-                        photoItem.addEventListener('click', () => this.openLightbox(index));
-                        grid.appendChild(photoItem);
+                        this.createPhotoThumbnail(photo, index, grid);
                     });
                     
-                    console.log(`✅ ${this.photos.length} photos chargées automatiquement`);
+                    console.log(`✅ ${this.photos.length} photos chargées`);
                     
                 } catch (error) {
-                    console.error('Erreur chargement galerie:', error);
-                    grid.innerHTML = `
-                        <div class="photo-placeholder">
-                            Erreur de chargement<br>
-                            <small>Vérifiez que sampleFolder contient des photos</small>
+                    console.error('Erreur:', error);
+                    grid.innerHTML = '<div class="photo-loading">Erreur de chargement</div>';
+                }
+            }
+            
+            createPhotoThumbnail(photo, index, grid) {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                photoItem.setAttribute('data-index', index);
+                
+                // URL pour la miniature (basse résolution via GitHub)
+                const thumbUrl = photo.download_url + '?raw=true&size=300';
+                
+                // URL pour la version HD (Git LFS)
+                const hdUrl = this.baseUrl + photo.name;
+                
+                // Crée l'élément image
+                const img = document.createElement('img');
+                img.alt = photo.name;
+                img.loading = 'lazy';
+                
+                // Essaie de charger la miniature basse résolution
+                img.onload = () => {
+                    console.log('✅ Miniature chargée:', photo.name);
+                };
+                
+                img.onerror = () => {
+                    // Si la miniature échoue, utilise un placeholder coloré
+                    photoItem.innerHTML = `
+                        <div class="photo-loading" style="background: #2a2a2a;">
+                            ${photo.name}<br>
+                            <small style="color: var(--taupe);">Photo disponible en HD</small>
                         </div>
                     `;
-                }
+                };
+                
+                // Charge la miniature
+                img.src = thumbUrl;
+                photoItem.appendChild(img);
+                photoItem.addEventListener('click', () => this.openLightbox(index));
+                grid.appendChild(photoItem);
             }
             
             initLightbox() {
@@ -368,12 +372,6 @@
                     if (e.key === 'Escape') this.closeLightbox();
                     if (e.key === 'ArrowLeft') this.prevPhoto();
                     if (e.key === 'ArrowRight') this.nextPhoto();
-                });
-                
-                document.getElementById('lightbox').addEventListener('click', (e) => {
-                    if (e.target === document.getElementById('lightbox')) {
-                        this.closeLightbox();
-                    }
                 });
             }
             
@@ -387,18 +385,17 @@
                 const lightboxImg = document.getElementById('lightbox-img');
                 const photoInfo = document.getElementById('photo-info');
                 
-                lightboxImg.src = '';
-                photoInfo.textContent = `Chargement ${photo.name}...`;
+                // Affiche d'abord la miniature en attendant le HD
+                lightboxImg.src = this.photos[index].download_url + '?raw=true';
+                photoInfo.textContent = `Chargement HD...`;
                 
-                // Charge la version HD depuis Git LFS
+                // Charge la version HD en arrière-plan
                 const hdImage = new Image();
                 hdImage.onload = () => {
                     lightboxImg.src = hdUrl;
                     photoInfo.textContent = `${photo.name} • HERAULT Adel`;
                 };
                 hdImage.onerror = () => {
-                    // Fallback sur l'URL de téléchargement standard
-                    lightboxImg.src = photo.download_url;
                     photoInfo.textContent = `${photo.name} • HERAULT Adel (qualité standard)`;
                 };
                 hdImage.src = hdUrl;
@@ -419,9 +416,9 @@
             }
         }
         
-        // Démarre la galerie automatique
+        // Démarre la galerie
         document.addEventListener('DOMContentLoaded', () => {
-            new AutoGallery();
+            new SmartGallery();
         });
     </script>
 </body>
